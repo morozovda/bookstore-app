@@ -1,0 +1,56 @@
+version: '3.3'
+
+services:
+    api:
+        build:
+            context: .
+            args:
+                - WEBPORT=${WEBPORT}
+        container_name: bookstore_api
+        restart: unless-stopped
+        ports:
+            - ${WEBPORT}:${WEBPORT}
+        networks:
+            - bookstore_net
+        depends_on:
+            - db
+        environment:
+            - WEBPORT=${WEBPORT}
+            - WEBURL=${WEBURL}
+            - DBHOST=${DBHOST}
+            - DBUSER=${DBUSER}
+            - DBPASSWD=${DBPASSWD}
+            - DBNAME=${DBNAME}
+
+    nginx:
+        image: nginx
+        container_name: bookstore_web
+        restart: unless-stopped
+        networks:
+            - bookstore_net        
+        ports:
+            - 8888:80
+        depends_on:
+            - api
+        environment:
+            - WEBPORT=${WEBPORT}
+        volumes:
+            - ./nginx/templates/api.conf.template:/etc/nginx/templates/api.conf.template
+
+    db:
+        image: postgres:15.2
+        container_name: bookstore_db
+        restart: unless-stopped
+        command: ["postgres", "-c", "log_statement=all"]
+        networks:
+            - bookstore_net
+        environment:
+            - POSTGRES_USER=${DBUSER}
+            - POSTGRES_PASSWORD=${DBPASSWD}
+            - POSTGRES_DB=${DBNAME}
+        volumes:
+            - ./postgres/data:/var/lib/postgres/data
+            - ./postgres/entry:/docker-entrypoint-initdb.d
+
+networks:
+    bookstore_net:
