@@ -1,2 +1,2 @@
-# bookstore-api
+# bookstore-app
 
