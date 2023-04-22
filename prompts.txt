@@ -1,0 +1,14 @@
+curl -vs http://127.0.0.1:8888/market | jq
+
+curl -v -X POST -H 'Content-Type: application/json' -d '{"name":"Bob","email":"bob@example.com","passwd":"qwerty1234"}' http://127.0.0.1:8888/signup | jq
+curl -v -X POST -H 'Content-Type: application/json' -d '{"name":"Alice","email":"rob@example.com","passwd":"1234qwerty"}' http://127.0.0.1:8888/signup | jq
+curl -v -X POST -H 'Content-Type: application/json' -d '{"name":"Eve","email":"tom@example.com","passwd":"12qwerty34"}' http://127.0.0.1:8888/signup | jq
+
+curl -v -X POST -H 'Content-Type: application/json' -d '{"book":3,"amount":1,"id":1}' http://127.0.0.1:8888/market/deal | jq
+
+curl -v -X POST -H 'Content-Type: application/json' -d '{"id": 1}' http://127.0.0.1:8888/account | jq
+
+curl -vs http://127.0.0.1:8888/test1 | jq
+curl -vs http://127.0.0.1:8888/test2 | jq
+
+docker exec -it bookstore_db psql -U bookstore bookstore
