@@ -29,7 +29,7 @@ type (
 		Customer_id int
 	}
 	
-	Customerdeal struct {
+	Account struct {
 		Books []Book `json:"books"`
 		Balance int `json:"balance"`
 	}

@@ -25,7 +25,7 @@ func (h *Handler) Market (c echo.Context) error {
 	rows, err := h.DB.Query("SELECT \"id\", \"title\", \"author\", \"price\", \"amount\" FROM \"book\";")
 	switch err {
 		case sql.ErrNoRows:
-			return c.NoContent(http.StatusNoContent)
+			return c.JSON(http.StatusOK, books)
             
 		case nil:
 			defer rows.Close()
@@ -183,7 +183,7 @@ func (h *Handler) Deal (c echo.Context) error {
 func (h *Handler) Account (c echo.Context) error {
 	i := new(models.Ids)
 	bs := []models.Book{}
-	var cd models.Customerdeal
+	var cd models.Account
 	var balance int
 	var cExists bool
 	var e models.Error
