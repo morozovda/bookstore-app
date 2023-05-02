@@ -24,9 +24,9 @@ type (
 	}
 	
 	Deal struct {
-		Book_id int
-		Order_amount int 
-		Customer_id int
+		Book_id int `json:"book"`
+		Order_amount int `json:"amount"`
+		Customer_id int `json:"id"`
 	}
 	
 	Account struct {
