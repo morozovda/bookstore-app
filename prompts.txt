@@ -1,4 +1,4 @@
-curl -vs http://127.0.0.1:8888/market | jq
+curl -vs -X GET http://127.0.0.1:8888/market | jq
 
 curl -v -X POST -H 'Content-Type: application/json' -d '{"name":"Bob","email":"bob@example.com","passwd":"qwerty1234"}' http://127.0.0.1:8888/signup | jq
 curl -v -X POST -H 'Content-Type: application/json' -d '{"name":"Alice","email":"rob@example.com","passwd":"1234qwerty"}' http://127.0.0.1:8888/signup | jq
