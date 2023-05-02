@@ -18,9 +18,9 @@ type (
 	}
 	
 	Customer struct {
-		Name string
-		Email string
-		Passwd string
+		Name string `json:"name"`
+		Email string `json:"email"`
+		Passwd string `json:"passwd"`
 	}
 	
 	Deal struct {
