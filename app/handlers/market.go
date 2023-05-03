@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *Handler) Market (c echo.Context) error {
+func (h *DBH) Market (c echo.Context) error {
 	books := []models.Book{}
 	var market models.Market
 	var e models.Error

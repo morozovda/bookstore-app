@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *Handler) Deal (c echo.Context) error {
+func (h *DBH) Deal (c echo.Context) error {
 	d := new(models.Deal)
 	var e models.Error
 	var cid uuid.UUID

@@ -13,7 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (h *Handler) Signup (c echo.Context) error {
+func (h *DBH) Signup (c echo.Context) error {
 	customer := new(models.Customer)
 	var cid uuid.UUID
 	var e models.Error

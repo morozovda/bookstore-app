@@ -11,7 +11,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (h *Handler) Account (c echo.Context) error {
+func (h *DBH) Account (c echo.Context) error {
 	bs := []models.Book{}
 	var e models.Error
 	var cd models.Account

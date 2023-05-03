@@ -15,7 +15,7 @@ import (
 func main() {
 	dbc := db.Start()
 	defer dbc.Close()
-	h := &handlers.Handler{DB: dbc}
+	h := &handlers.DBH{DB: dbc}
 	
 	e := echo.New()
 	e.Use(middleware.Logger())

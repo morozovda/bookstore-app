@@ -5,7 +5,7 @@ import (
 )
 
 type (
-	Handler struct {
+	DBH struct {
 		DB *sql.DB
 	}
 )

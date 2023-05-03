@@ -15,7 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (h *Handler) Signin (c echo.Context) error {
+func (h *DBH) Signin (c echo.Context) error {
 	lc := new(models.Logincustomer)
 	var jwts models.Jwts
 	var e models.Error
