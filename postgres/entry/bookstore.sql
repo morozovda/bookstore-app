@@ -7,15 +7,15 @@ CREATE TABLE "book" (
 );
 
 INSERT INTO "book" ("title", "author", "price", "amount") VALUES
-('Alice''s Adventures in Wonderland', 'Lewis Carroll', 4, 15),
-('The Selfish Gene', 'Richard Dawkins', 6, 7),
-('Dead Souls', 'Nikolai Gogol', 4, 11),
-('War and Peace', 'Leo Tolstoy', 7, 5),
-('The Brothers Karamazov', 'Fyodor Dostoevsky', 4, 19),
-('Sword of Destiny', 'Andrzej Sapkowski', 3, 16),
-('Death Note', 'Tsugumi Ohba', 5, 10),
-('Berserk', 'Kentaro Miura', 6, 5),
-('Tokyo Ghoul', 'Sui Ishida', 3, 6);
+('Alice''s Adventures in Wonderland', 'Lewis Carroll', 400, 15),
+('The Selfish Gene', 'Richard Dawkins', 600, 7),
+('Dead Souls', 'Nikolai Gogol', 400, 11),
+('War and Peace', 'Leo Tolstoy', 700, 5),
+('The Brothers Karamazov', 'Fyodor Dostoevsky', 400, 19),
+('Sword of Destiny', 'Andrzej Sapkowski', 300, 16),
+('Death Note', 'Tsugumi Ohba', 500, 10),
+('Berserk', 'Kentaro Miura', 600, 5),
+('Tokyo Ghoul', 'Sui Ishida', 300, 6);
 
 CREATE TABLE "customer" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),

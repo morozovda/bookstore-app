@@ -13,11 +13,11 @@ import (
 
 func (h *DBH) Account (c echo.Context) error {
 	bs := []models.Book{}
-	var e models.Error
 	var cd models.Account
 	var cid uuid.UUID
 	var balance int
 	var cExists bool
+	var e models.Error
 	
 	token := c.Get("customer").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
@@ -46,6 +46,7 @@ func (h *DBH) Account (c echo.Context) error {
 					e.Message = "service unavailable"
 					return c.JSON(http.StatusServiceUnavailable, e)
 				}
+				book.Price = book.Price/100
 				bs = append(bs, book)
 			}
 
@@ -59,7 +60,7 @@ func (h *DBH) Account (c echo.Context) error {
 			_ = h.DB.QueryRow("SELECT \"balance\" FROM \"customer\" WHERE \"id\" = $1;", cid).Scan(&balance)
 			
 			cd.Books = bs
-			cd.Balance = balance
+			cd.Balance = balance/100
 			
 			return c.JSON(http.StatusOK, cd)
             

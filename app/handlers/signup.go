@@ -14,7 +14,7 @@ import (
 )
 
 func (h *DBH) Signup (c echo.Context) error {
-	customer := new(models.Customer)
+	customer := new(models.Regcustomer)
 	var cid uuid.UUID
 	var e models.Error
 	
@@ -52,7 +52,7 @@ func (h *DBH) Signup (c echo.Context) error {
 			}
 			
 			if customer.Name == "Bob" {
-				_, err := h.DB.Exec("UPDATE \"customer\" SET \"balance\" = '20' WHERE \"id\" = $1;", cid)
+				_, err := h.DB.Exec("UPDATE \"customer\" SET \"balance\" = '2000' WHERE \"id\" = $1;", cid)
 				if err != nil {
 					log.Fatal("claim failed")
 				}

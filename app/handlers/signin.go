@@ -18,9 +18,9 @@ import (
 func (h *DBH) Signin (c echo.Context) error {
 	lc := new(models.Logincustomer)
 	var jwts models.Jwts
-	var e models.Error
-	var dbpasswd string
 	var dbid uuid.UUID
+	var dbpasswd string
+	var e models.Error
 	
 	err := c.Bind(lc)
 	if err != nil {

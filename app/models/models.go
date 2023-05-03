@@ -21,7 +21,7 @@ type (
 		Books []Book `json:"books"`
 	}
 	
-	Customer struct {
+	Regcustomer struct {
 		Name string `json:"name"`
 		Email string `json:"email"`
 		Passwd string `json:"passwd"`
