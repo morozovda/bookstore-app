@@ -22,7 +22,7 @@ services:
             - DBPASSWD=${DBPASSWD}
             - DBNAME=${DBNAME}
 
-    nginx:
+    web:
         image: nginx
         container_name: bookstore_web
         restart: unless-stopped

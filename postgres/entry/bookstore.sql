@@ -1,5 +1,5 @@
 CREATE TABLE "book" (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     title VARCHAR(200) NOT NULL,
     author VARCHAR(200) NOT NULL,
     price INT NOT NULL,
@@ -18,7 +18,7 @@ INSERT INTO "book" ("title", "author", "price", "amount") VALUES
 ('Tokyo Ghoul', 'Sui Ishida', 3, 6);
 
 CREATE TABLE "customer" (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL,
     passwd VARCHAR(60) NOT NULL,
@@ -26,10 +26,10 @@ CREATE TABLE "customer" (
 );
 
 CREATE TABLE deal (
-    id SERIAL PRIMARY KEY,
-    book_id INT NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    book_id UUID NOT NULL,
     order_amount INT NOT NULL,
-    customer_id INT NOT NULL,
+    customer_id UUID NOT NULL,
     CONSTRAINT fk_book FOREIGN KEY(book_id) REFERENCES book(id),
     CONSTRAINT fk_customer FOREIGN KEY(customer_id) REFERENCES customer(id)
 );

@@ -1,12 +1,16 @@
 package models
 
+import (
+	"github.com/google/uuid"
+)
+
 type (
-	Ids struct {
-		Id int `json:"id"`
+	Jwts struct {
+		Jwtstr string `json:"token"`
 	}
 	
 	Book struct {
-		Id int `json:"id"`
+		Id uuid.UUID `json:"id"`
 		Title string `json:"title"`
 		Author string `json:"author"`
 		Price int `json:"price"`
@@ -23,10 +27,14 @@ type (
 		Passwd string `json:"passwd"`
 	}
 	
+	Logincustomer struct {
+		Email string `json:"email"`
+		Passwd string `json:"passwd"`
+	}
+	
 	Deal struct {
-		Book_id int `json:"book"`
+		Book_id uuid.UUID `json:"book"`
 		Order_amount int `json:"amount"`
-		Customer_id int `json:"id"`
 	}
 	
 	Account struct {
