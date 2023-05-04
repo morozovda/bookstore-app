@@ -13,14 +13,14 @@ import (
 
 func (h *DBH) Deal (c echo.Context) error {
 	d := new(models.Deal)
-	var cid uuid.UUID
+	var customerId uuid.UUID
 	var bExists, cExists bool
 	var bookAmount, bookPrice, customerBalance int
 	var e models.Error
 	
 	token := c.Get("customer").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
-	cid, err := uuid.Parse(claims["id"].(string))
+	customerId, err := uuid.Parse(claims["id"].(string))
 	if err != nil {
 		e.Message = "request failed"
 		return c.JSON(http.StatusBadRequest, e)
@@ -32,9 +32,9 @@ func (h *DBH) Deal (c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	_ = h.DB.QueryRow("SELECT EXISTS (SELECT \"id\" FROM \"customer\" WHERE \"id\" = $1);", cid).Scan(&cExists)
+	_ = h.DB.QueryRow("SELECT EXISTS (SELECT \"id\" FROM \"customer\" WHERE \"id\" = $1);", customerId).Scan(&cExists)
 	if cExists == false {
-		log.Printf("customer %s doesnt exist", cid.String())
+		log.Printf("customer %s doesnt exist", customerId.String())
 		e.Message = "invalid credentials"
 		return c.JSON(http.StatusBadRequest, e)
 	}
@@ -53,30 +53,30 @@ func (h *DBH) Deal (c echo.Context) error {
 		return c.JSON(http.StatusConflict, e)
 	}
 
-	_ = h.DB.QueryRow("SELECT \"balance\" FROM \"customer\" WHERE \"id\" = $1;", cid).Scan(&customerBalance)
+	_ = h.DB.QueryRow("SELECT \"balance\" FROM \"customer\" WHERE \"id\" = $1;", customerId).Scan(&customerBalance)
 	_ = h.DB.QueryRow("SELECT \"price\" FROM \"book\" WHERE \"id\" = $1;", d.Book_id).Scan(&bookPrice)
 	if customerBalance < bookPrice*d.Order_amount {
-		log.Printf("not enough funds in balance %d", cid)
+		log.Printf("not enough funds in balance %d", customerId)
 		e.Message = "not enough funds in balance"
 		return c.JSON(http.StatusConflict, e)
 	}
 
-	customerBalance = customerBalance - bookPrice
-	_, err = h.DB.Exec("UPDATE \"customer\" SET \"balance\" = $1 WHERE \"id\" = $2;", customerBalance, cid)
+	customerBalance -= bookPrice
+	_, err = h.DB.Exec("UPDATE \"customer\" SET \"balance\" = $1 WHERE \"id\" = $2;", customerBalance, customerId)
 	if err != nil {
 		log.Fatal("transaction failed")
 		e.Message = "transaction unavailable"
 		return c.JSON(http.StatusServiceUnavailable, e)
 	}
 
-	_, err = h.DB.Exec("UPDATE \"book\" SET \"amount\" = $1 WHERE \"id\" = $2;", bookAmount-d.Order_amount, d.Book_id)
+	_, err = h.DB.Exec("UPDATE \"book\" SET \"amount\" = $1 WHERE \"id\" = $2;", bookAmount - d.Order_amount, d.Book_id)
 	if err != nil {
 		log.Fatal("request failed")
 		e.Message = "service unavailable"
 		return c.JSON(http.StatusServiceUnavailable, e)
 	}
 
-	_, err = h.DB.Exec("INSERT INTO \"deal\" (\"book_id\", \"order_amount\", \"customer_id\") VALUES ($1, $2, $3);", d.Book_id, d.Order_amount, cid)
+	_, err = h.DB.Exec("INSERT INTO \"deal\" (\"book_id\", \"order_amount\", \"customer_id\") VALUES ($1, $2, $3);", d.Book_id, d.Order_amount, customerId)
 	if err != nil {
 		log.Fatal("request failed")
 		e.Message = "service unavailable"

@@ -18,8 +18,8 @@ import (
 func (h *DBH) Signin (c echo.Context) error {
 	lc := new(models.Logincustomer)
 	var jwts models.Jwts
-	var dbid uuid.UUID
-	var dbpasswd string
+	var customerId uuid.UUID
+	var customerPasswd string
 	var e models.Error
 	
 	err := c.Bind(lc)
@@ -39,14 +39,14 @@ func (h *DBH) Signin (c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	err = h.DB.QueryRow("SELECT \"id\", \"passwd\" FROM \"customer\" WHERE \"email\"=$1", lc.Email).Scan(&dbid, &dbpasswd)
+	err = h.DB.QueryRow("SELECT \"id\", \"passwd\" FROM \"customer\" WHERE \"email\"=$1", lc.Email).Scan(&customerId, &customerPasswd)
 	switch err {
 		case sql.ErrNoRows:
 			e.Message = "request failed"
 			return c.JSON(http.StatusBadRequest, e)
 			
 		case nil:
-			err = bcrypt.CompareHashAndPassword([]byte(dbpasswd), []byte(lc.Passwd))
+			err = bcrypt.CompareHashAndPassword([]byte(customerPasswd), []byte(lc.Passwd))
 			if err != nil {
 				e.Message = "request failed"
 				return c.JSON(http.StatusBadRequest, e)
@@ -54,7 +54,7 @@ func (h *DBH) Signin (c echo.Context) error {
 			
 			token := jwt.New(jwt.SigningMethodHS256)
 			claims := token.Claims.(jwt.MapClaims)
-			claims["id"] = dbid
+			claims["id"] = customerId
 			claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 			jwts.Jwtstr, err = token.SignedString([]byte(Key))
 			if err != nil {

@@ -29,6 +29,9 @@ func (h *DBH) Market (c echo.Context) error {
 					e.Message = "service unavailable"
 					return c.JSON(http.StatusServiceUnavailable, e)
 				}
+				if book.Amount == 0 {
+					continue
+				}
 				book.Price = book.Price/100
 				books = append(books, book)
 			}

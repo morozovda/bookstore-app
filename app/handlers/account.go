@@ -13,28 +13,28 @@ import (
 
 func (h *DBH) Account (c echo.Context) error {
 	bs := []models.Book{}
-	var cd models.Account
-	var cid uuid.UUID
+	var customerAcc models.Account
+	var customerId uuid.UUID
 	var balance int
 	var cExists bool
 	var e models.Error
 	
 	token := c.Get("customer").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
-	cid, err := uuid.Parse(claims["id"].(string))
+	customerId, err := uuid.Parse(claims["id"].(string))
 	if err != nil {
 		e.Message = "request failed"
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	_ = h.DB.QueryRow("SELECT EXISTS (SELECT \"id\" FROM \"customer\" WHERE \"id\" = $1);", cid).Scan(&cExists)
+	_ = h.DB.QueryRow("SELECT EXISTS (SELECT \"id\" FROM \"customer\" WHERE \"id\" = $1);", customerId).Scan(&cExists)
 	if cExists == false {
-		log.Printf("customer %s doesnt exist", cid)
+		log.Printf("customer %s doesnt exist", customerId)
 		e.Message = "invalid credentials"
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	rows, err := h.DB.Query("SELECT \"book\".\"id\", \"book\".\"title\", \"book\".\"author\", \"book\".\"price\", \"order_amount\" FROM \"deal\" INNER JOIN \"book\" ON \"deal\".\"book_id\" = \"book\".\"id\" WHERE \"customer_id\"=$1;", cid)
+	rows, err := h.DB.Query("SELECT \"book\".\"id\", \"book\".\"title\", \"book\".\"author\", \"book\".\"price\", \"order_amount\" FROM \"deal\" INNER JOIN \"book\" ON \"deal\".\"book_id\" = \"book\".\"id\" WHERE \"customer_id\"=$1;", customerId)
 	switch err {
 		case nil:
 			defer rows.Close()
@@ -57,12 +57,12 @@ func (h *DBH) Account (c echo.Context) error {
 				return c.JSON(http.StatusServiceUnavailable, e)        
 			}
 	
-			_ = h.DB.QueryRow("SELECT \"balance\" FROM \"customer\" WHERE \"id\" = $1;", cid).Scan(&balance)
+			_ = h.DB.QueryRow("SELECT \"balance\" FROM \"customer\" WHERE \"id\" = $1;", customerId).Scan(&balance)
 			
-			cd.Books = bs
-			cd.Balance = balance/100
+			customerAcc.Books = bs
+			customerAcc.Balance = balance/100
 			
-			return c.JSON(http.StatusOK, cd)
+			return c.JSON(http.StatusOK, customerAcc)
             
 		default:
 			log.Fatal("service unavailable")
