@@ -1,9 +1,9 @@
-CREATE TABLE "book" (
+CREATE TABLE IF NOT EXISTS "book" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     title VARCHAR(200) NOT NULL,
     author VARCHAR(200) NOT NULL,
-    price INT NOT NULL,
-    amount INT NOT NULL
+    price INT NOT NULL DEFAULT 0,
+    amount INT NOT NULL DEFAULT 0
 );
 
 INSERT INTO "book" ("title", "author", "price", "amount") VALUES
@@ -17,7 +17,7 @@ INSERT INTO "book" ("title", "author", "price", "amount") VALUES
 ('Berserk', 'Kentaro Miura', 600, 5),
 ('Tokyo Ghoul', 'Sui Ishida', 300, 6);
 
-CREATE TABLE "customer" (
+CREATE TABLE IF NOT EXISTS "customer" (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(200) NOT NULL,
     email VARCHAR(200) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE "customer" (
     balance INT DEFAULT 0
 );
 
-CREATE TABLE deal (
+CREATE TABLE IF NOT EXISTS deal (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     book_id UUID NOT NULL,
     order_amount INT NOT NULL,
