@@ -39,7 +39,7 @@ func (h *DBH) Signin (c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	err = h.DB.QueryRow("SELECT \"id\", \"passwd\" FROM \"customer\" WHERE \"email\"=$1", lc.Email).Scan(&customerId, &customerPasswd)
+	err = h.DB.QueryRow("SELECT \"id\", \"passwd\" FROM \"customer\" WHERE \"email\"=$1;", lc.Email).Scan(&customerId, &customerPasswd)
 	switch err {
 		case sql.ErrNoRows:
 			e.Message = "request failed"

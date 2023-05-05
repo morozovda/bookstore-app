@@ -32,7 +32,13 @@ func (h *DBH) Deal (c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	_ = h.DB.QueryRow("SELECT EXISTS (SELECT \"id\" FROM \"customer\" WHERE \"id\" = $1);", customerId).Scan(&cExists)
+	err = h.DB.QueryRow("SELECT EXISTS (SELECT \"id\" FROM \"customer\" WHERE \"id\" = $1);", customerId).Scan(&cExists)
+	if err != nil {
+		log.Fatal("service unavailable")
+		e.Message = "service unavailable"
+		return c.JSON(http.StatusServiceUnavailable, e)
+	}
+	
 	if cExists == false {
 		log.Printf("customer %s doesnt exist", customerId.String())
 		e.Message = "invalid credentials"
@@ -61,8 +67,7 @@ func (h *DBH) Deal (c echo.Context) error {
 		return c.JSON(http.StatusConflict, e)
 	}
 
-	customerBalance -= bookPrice
-	_, err = h.DB.Exec("UPDATE \"customer\" SET \"balance\" = $1 WHERE \"id\" = $2;", customerBalance, customerId)
+	_, err = h.DB.Exec("UPDATE \"customer\" SET \"balance\" = $1 WHERE \"id\" = $2;", customerBalance - bookPrice, customerId)
 	if err != nil {
 		log.Fatal("transaction failed")
 		e.Message = "transaction unavailable"
