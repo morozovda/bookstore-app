@@ -2,7 +2,7 @@ platform: linux/amd64
 
 when:
     event: [push]
-    branch: [main, sec]
+    branch: [sec]
   
 pipeline:
     build-api:
