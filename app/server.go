@@ -27,11 +27,11 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderAccept, echo.HeaderAuthorization, echo.HeaderContentType, echo.HeaderContentLength},
 		AllowMethods: []string{http.MethodGet, http.MethodPost},
 	}))
-	
+
 	e.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
 		Timeout: time.Minute,
 	}))
-	
+
 	e.Use(middleware.RequestIDWithConfig(middleware.RequestIDConfig{
 		Generator: func() string {
 			return uuid.NewString()

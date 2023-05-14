@@ -2,10 +2,13 @@ upstream api {
         server api:$WEBPORT;
 }
 
+limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+
 server {
         listen 80;
  
         location / {
+                limit_req zone=api burst=20 nodelay;
                 proxy_pass http://api;
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
