@@ -15,7 +15,8 @@ import (
 
 func (h *DBH) Signup (c echo.Context) error {
 	customer := new(models.Regcustomer)
-	var cid uuid.UUID
+	var customerId uuid.UUID
+	var customerCount int
 	var e models.Error
 	
 	err := c.Bind(customer)
@@ -41,18 +42,19 @@ func (h *DBH) Signup (c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, e)
 	}
 	
-	err = h.DB.QueryRow("SELECT \"id\" FROM \"customer\" WHERE \"name\"=$1 AND \"email\"=$2;", customer.Name, customer.Email).Scan(&cid)
+	err = h.DB.QueryRow("SELECT \"id\" FROM \"customer\" WHERE \"name\"=$1 AND \"email\"=$2;", customer.Name, customer.Email).Scan(&customerId)
 	switch err {
 		case sql.ErrNoRows:
-			err := h.DB.QueryRow("INSERT INTO \"customer\" (\"name\", \"email\", \"passwd\") VALUES ($1, $2, $3) RETURNING \"id\";", customer.Name, customer.Email, string(hspasswd)).Scan(&cid)
+			err := h.DB.QueryRow("INSERT INTO \"customer\" (\"name\", \"email\", \"passwd\") VALUES ($1, $2, $3) RETURNING \"id\";", customer.Name, customer.Email, string(hspasswd)).Scan(&customerId)
 			if err != nil {
 				log.Fatal("invalid credentials")
 				e.Message = "invalid credentials"
 				return c.JSON(http.StatusBadRequest, e)
 			}
 			
-			if customer.Name == "Bob" {
-				_, err := h.DB.Exec("UPDATE \"customer\" SET \"balance\" = '2000' WHERE \"id\" = $1;", cid)
+			err = h.DB.QueryRow("SELECT COUNT(*) FROM \"customer\";").Scan(&customerCount)
+			if customerCount < 11 {
+				_, err := h.DB.Exec("UPDATE \"customer\" SET \"balance\" = '2000' WHERE \"id\" = $1;", customerId)
 				if err != nil {
 					log.Fatal("claim failed")
 				}
