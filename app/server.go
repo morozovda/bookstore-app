@@ -56,5 +56,5 @@ func main() {
 	e.GET("/market/:id", h.Marketbook)
 	e.POST("/market/deal", h.Deal)
 
-	e.Logger.Fatal(e.Start((os.Getenv("WEBURL") + ":" + os.Getenv("WEBPORT"))))
+	e.Logger.Fatal(e.Start((os.Getenv("APIURL") + ":" + os.Getenv("APIPORT"))))
 }

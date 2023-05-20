@@ -4,19 +4,15 @@ services:
     api:
         build:
             context: .
-            args:
-                - WEBPORT=${WEBPORT}
         container_name: bookstore_api
         restart: unless-stopped
-        ports:
-            - ${WEBPORT}:${WEBPORT}
         networks:
             - bookstore_net
         depends_on:
             - db
         environment:
-            - WEBPORT=${WEBPORT}
-            - WEBURL=${WEBURL}
+            - APIPORT=${APIPORT}
+            - APIURL=${APIURL}
             - DBHOST=${DBHOST}
             - DBUSER=${DBUSER}
             - DBPASSWD=${DBPASSWD}
@@ -29,11 +25,12 @@ services:
         networks:
             - bookstore_net        
         ports:
-            - 8888:80
+            - ${WEBPORT}:${WEBPORT}
         depends_on:
             - api
         environment:
             - WEBPORT=${WEBPORT}
+            - APIPORT=${APIPORT}
         volumes:
             - ./nginx/templates/api.conf.template:/etc/nginx/templates/api.conf.template
 
